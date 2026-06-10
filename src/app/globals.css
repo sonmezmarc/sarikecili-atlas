@@ -2,26 +2,241 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========== Theme Variables ========== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  /* Editor light theme */
+  --editor-bg: #f5f5f4;
+  --editor-surface: #ffffff;
+  --editor-surface-hover: #fafaf9;
+  --editor-border: #e7e5e4;
+  --editor-border-subtle: #f5f5f4;
+  --editor-text: #1c1917;
+  --editor-text-secondary: #78716c;
+  --editor-text-muted: #a8a29e;
+  --editor-accent: #f6d13b;
+  --editor-panel-bg: #ffffff;
+  --editor-toolbar-bg: #fafaf9;
+  --editor-canvas-bg: #f0efed;
+  --editor-canvas-dots: #d6d3d1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #171720;
+  --foreground: #d4d4dc;
+  /* Editor dark theme - shader node editor style */
+  --editor-bg: #171720;
+  --editor-surface: #1e1e2c;
+  --editor-surface-hover: #262638;
+  --editor-border: #2e2e42;
+  --editor-border-subtle: #232334;
+  --editor-text: #d4d4dc;
+  --editor-text-secondary: #9898aa;
+  --editor-text-muted: #606074;
+  --editor-accent: #f6d13b;
+  --editor-panel-bg: #1a1a28;
+  --editor-toolbar-bg: #1e1e2c;
+  --editor-canvas-bg: #14141e;
+  --editor-canvas-dots: #262638;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Editor font */
+.font-editor {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono-editor {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* ========== Scrollbar ========== */
+
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--editor-border);
+  border-radius: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--editor-text-muted);
+}
+
+/* ========== Mapbox Overrides ========== */
+
+.mapboxgl-ctrl-bottom-left,
+.mapboxgl-ctrl-bottom-right {
+  z-index: 10 !important;
+}
+
+.mapboxgl-popup-content {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  padding: 0 !important;
+}
+
+/* ========== React Flow Overrides ========== */
+
+.react-flow {
+  --xy-background-color: var(--editor-canvas-bg) !important;
+  --xy-background-pattern-color: var(--editor-canvas-dots) !important;
+  --xy-node-border-radius: 10px !important;
+  --xy-node-boxshadow-hover: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+  --xy-node-boxshadow-selected: 0 0 0 2px var(--editor-accent) !important;
+  --xy-minimap-background: var(--editor-surface) !important;
+  --xy-edge-stroke-default: var(--editor-text-muted) !important;
+}
+
+.react-flow__node {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+.react-flow__handle {
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
+}
+
+.react-flow__handle::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+}
+
+.react-flow__minimap {
+  border-radius: 8px !important;
+  border: 1px solid var(--editor-border) !important;
+  overflow: hidden !important;
+}
+
+.react-flow__controls {
+  border-radius: 8px !important;
+  border: 1px solid var(--editor-border) !important;
+  overflow: hidden !important;
+}
+
+.react-flow__controls-button {
+  background: var(--editor-surface) !important;
+  border-color: var(--editor-border) !important;
+  color: var(--editor-text-secondary) !important;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--editor-surface-hover) !important;
+  color: var(--editor-text) !important;
+}
+
+/* Selection box */
+.react-flow__selection {
+  border: 1px solid var(--editor-accent) !important;
+  background: rgba(246, 209, 59, 0.08) !important;
+}
+
+/* ========== Animations ========== */
+
+@keyframes subtle-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(180, 83, 9, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(180, 83, 9, 0); }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes edge-flow {
+  to { stroke-dashoffset: -20; }
+}
+
+.edge-animated {
+  animation: edge-flow 1s linear infinite;
+}
+
+/* ========== Prose Overrides ========== */
+
+.prose p {
+  color: #57534e;
+  line-height: 1.8;
+}
+
+.prose em {
+  color: #44403c;
+  font-style: italic;
+}
+
+/* ========== Editor Panel Utilities ========== */
+
+.panel-border {
+  border-color: var(--editor-border);
+}
+
+.panel-bg {
+  background-color: var(--editor-panel-bg);
+}
+
+.toolbar-bg {
+  background-color: var(--editor-toolbar-bg);
+}
+
+.surface-bg {
+  background-color: var(--editor-surface);
+}
+
+.text-primary {
+  color: var(--editor-text);
+}
+
+.text-secondary {
+  color: var(--editor-text-secondary);
+}
+
+.text-muted {
+  color: var(--editor-text-muted);
+}
+
+/* Splitter handle */
+.splitter {
+  background: var(--editor-border);
+  transition: background 150ms;
+}
+
+.splitter:hover {
+  background: var(--editor-accent);
+}
+
+.splitter:active {
+  background: var(--editor-accent);
+}
+
+/* ========== Tooltip ========== */
+
+.tooltip {
+  background: var(--editor-surface);
+  color: var(--editor-text);
+  border: 1px solid var(--editor-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
